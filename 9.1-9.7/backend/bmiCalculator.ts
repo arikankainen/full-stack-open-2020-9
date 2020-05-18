@@ -1,5 +1,5 @@
 const calculateBmi = (height: number, weight: number): string => {
-  const bmi: number = weight / ((height / 100) * (height / 100))
+  const bmi: number = weight / ((height / 100) * (height / 100));
 
   if (bmi >= 40) return 'Obese Class III (Very severely obese)';
   else if (bmi >= 35) return 'Obese Class II (Severely obese)';
