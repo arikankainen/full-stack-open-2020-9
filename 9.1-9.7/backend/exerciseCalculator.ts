@@ -1,4 +1,27 @@
-interface ReturnValues {
+interface ExerciseValues {
+  list: number[],
+  target: number
+}
+
+const parseExerciseArguments = (args: Array<string>): ExerciseValues => {
+  if (args.length < 4) throw new Error('Not enought arguments!');
+
+  args.slice(2).map((value: any) => {
+    if (isNaN(Number(value))) {
+      throw new Error('Provided values were not numbers!');
+    }
+  })
+
+  const list: number[] = args.slice(3).map((value: string) => Number(value));
+  const target: number = Number(args[2]);
+
+  return {
+    list,
+    target
+  }
+}
+
+interface ExerciseObject {
   periodLength: number,
   trainingDays: number,
   success: boolean,
@@ -8,7 +31,7 @@ interface ReturnValues {
   average: number
 }
 
-const calculateExercises = (list: number[], target: number): ReturnValues => {
+const calculateExercises = (list: number[], target: number): ExerciseObject => {
   const periodLength: number = list.length;
   const trainingDays: number = list.filter((value: number) => value > 0).length;
   const average: number = list.reduce((sum: number, value: number) => sum + value) / list.length;
@@ -39,4 +62,9 @@ const calculateExercises = (list: number[], target: number): ReturnValues => {
   };
 }
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+try {
+  const { list, target } = parseExerciseArguments(process.argv);
+  console.log(calculateExercises(list, target));
+} catch (error) {
+  console.log('Error:', error.message);
+}
