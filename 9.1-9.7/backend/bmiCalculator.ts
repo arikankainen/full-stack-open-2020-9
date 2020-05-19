@@ -1,6 +1,6 @@
 interface BmiValues {
-  height: number,
-  weight: number
+  height: number;
+  weight: number;
 }
 
 const parseBmiArguments = (args: Array<string>): BmiValues => {
@@ -11,11 +11,11 @@ const parseBmiArguments = (args: Array<string>): BmiValues => {
     return {
       height: Number(args[2]),
       weight: Number(args[3])
-    }
+    };
   } else {
     throw new Error('Provided values were not numbers!');
   }
-}
+};
 
 const calculateBmi = (height: number, weight: number): string => {
   const bmi: number = weight / ((height / 100) * (height / 100));
@@ -28,7 +28,7 @@ const calculateBmi = (height: number, weight: number): string => {
   else if (bmi >= 16) return 'Underweight';
   else if (bmi >= 15) return 'Severely underweight';
   else return 'Very severely underweight';
-}
+};
 
 try {
   const { height, weight } = parseBmiArguments(process.argv);

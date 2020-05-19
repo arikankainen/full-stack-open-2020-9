@@ -1,34 +1,34 @@
 interface ExerciseValues {
-  list: number[],
-  target: number
+  list: number[];
+  target: number;
 }
 
 const parseExerciseArguments = (args: Array<string>): ExerciseValues => {
   if (args.length < 4) throw new Error('Not enought arguments!');
 
-  args.slice(2).map((value: any) => {
+  args.slice(2).map((value: string) => {
     if (isNaN(Number(value))) {
       throw new Error('Provided values were not numbers!');
     }
-  })
+  });
 
   const list: number[] = args.slice(3).map((value: string) => Number(value));
-  const target: number = Number(args[2]);
+  const target = Number(args[2]);
 
   return {
     list,
     target
-  }
-}
+  };
+};
 
 interface ExerciseObject {
-  periodLength: number,
-  trainingDays: number,
-  success: boolean,
-  rating: number,
-  ratingDescription: string,
-  target: number,
-  average: number
+  periodLength: number;
+  trainingDays: number;
+  success: boolean;
+  rating: number;
+  ratingDescription: string;
+  target: number;
+  average: number;
 }
 
 const calculateExercises = (list: number[], target: number): ExerciseObject => {
@@ -60,7 +60,7 @@ const calculateExercises = (list: number[], target: number): ExerciseObject => {
     target,
     average
   };
-}
+};
 
 try {
   const { list, target } = parseExerciseArguments(process.argv);
