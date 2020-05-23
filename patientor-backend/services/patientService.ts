@@ -19,7 +19,6 @@ const getNonSensitiveEntries = (): NonSensitivePatient[] => {
 };
 
 const addEntry = (entry: NewPatient): Patient => {
-
   const newPatientEntry = {
     id: uuid(),
     ...entry
