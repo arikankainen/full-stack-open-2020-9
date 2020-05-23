@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useStateValue, updatePatient } from "../state";
-import { Patient, Gender } from '../types';
+import { Patient } from '../types';
 import axios from 'axios';
 import { apiBaseUrl } from "../constants";
-import { Container, Header, Icon } from "semantic-ui-react";
-import { Entry } from '../types';
+import { Container, Header } from "semantic-ui-react";
+import EntryDetails from './EntryDetails';
+import GenderIcon from './GenderIcon';
 
 const PatientDetailsPage: React.FC = () => {
   const [{ patients }, dispatch] = useStateValue();
@@ -34,21 +35,11 @@ const PatientDetailsPage: React.FC = () => {
     <div>Loading patient information...</div>
   );
 
-  enum GenderIcon {
-    Male = 'mars',
-    Female = 'venus',
-    Other = 'genderless'
-  }
-
-  let iconName: GenderIcon = GenderIcon.Other;
-  if (patient.gender === Gender.Male) iconName = GenderIcon.Male;
-  if (patient.gender === Gender.Female) iconName = GenderIcon.Female;
-
   return (
     <Container>
       <Header as='h2'>
         {patient.name}
-        <Icon name={iconName} />
+        <GenderIcon patient={patient} />
       </Header>
       
       <div>ssn: {patient.ssn}</div>
@@ -60,64 +51,6 @@ const PatientDetailsPage: React.FC = () => {
       )}
     </Container>
   );
-};
-
-interface EntryDetailsProps {
-  entry: Entry;
-}
-
-const assertNever = (value: never): never => {
-  throw new Error(
-    `Unhandled discrimitated union member: ${JSON.stringify(value)}`
-  );
-};
-
-const EntryDetails: React.FC<EntryDetailsProps> = ({ entry }) => {
-  const [{ diagnosis },] = useStateValue();
-
-  switch (entry.type) {
-    case 'HealthCheck':
-      return (
-        <div>
-          <p>{entry.date} <span style={{fontStyle: 'italic'}}>{entry.description}</span></p>
-          <ul>
-            {entry.diagnosisCodes?.map(code =>
-              <li key={code}>
-                {code} {diagnosis[code].name}
-              </li>
-            )}
-          </ul>
-        </div>
-      );
-    case 'OccupationalHealthcare':
-      return (
-        <div>
-          <p>{entry.date} <span style={{fontStyle: 'italic'}}>{entry.description}</span></p>
-          <ul>
-            {entry.diagnosisCodes?.map(code =>
-              <li key={code}>
-                {code} {diagnosis[code].name}
-              </li>
-            )}
-          </ul>
-        </div>
-      );
-    case 'Hospital':
-     return (
-        <div>
-          <p>{entry.date} <span style={{fontStyle: 'italic'}}>{entry.description}</span></p>
-          <ul>
-            {entry.diagnosisCodes?.map(code =>
-              <li key={code}>
-                {code} {diagnosis[code].name}
-              </li>
-            )}
-          </ul>
-       </div>
-     );
-     default:
-      return assertNever(entry);
-  }
 };
 
 export default PatientDetailsPage;
