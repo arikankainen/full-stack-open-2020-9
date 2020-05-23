@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useStateValue } from "../state";
+import { useStateValue, updatePatient } from "../state";
 import { Patient, Gender } from '../types';
 import axios from 'axios';
 import { apiBaseUrl } from "../constants";
@@ -20,7 +20,7 @@ const PatientDetailsPage: React.FC = () => {
             `${apiBaseUrl}/patients/${patient.id}`
           );
           console.log('Patient info updated');
-          dispatch({ type: "UPDATE_PATIENT", payload: patientFromApi });
+          dispatch(updatePatient(patientFromApi));
         }
       } catch (e) {
         console.error(e);
