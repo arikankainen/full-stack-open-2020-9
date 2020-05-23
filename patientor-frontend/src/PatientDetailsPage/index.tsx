@@ -5,6 +5,7 @@ import { Patient, Gender } from '../types';
 import axios from 'axios';
 import { apiBaseUrl } from "../constants";
 import { Container, Header, Icon } from "semantic-ui-react";
+import { Entry } from '../types';
 
 const PatientDetailsPage: React.FC = () => {
   const [{ patients }, dispatch] = useStateValue();
@@ -52,8 +53,63 @@ const PatientDetailsPage: React.FC = () => {
       
       <div>ssn: {patient.ssn}</div>
       <div>occupation: {patient.occupation}</div>
+      
+      <Header as='h3'>entries</Header>
+      {patient.entries?.map(entry =>
+        <EntryDetails key={entry.id} entry={entry}/>
+      )}
     </Container>
   );
+};
+
+interface EntryDetailsProps {
+  entry: Entry;
+}
+
+const assertNever = (value: never): never => {
+  throw new Error(
+    `Unhandled discrimitated union member: ${JSON.stringify(value)}`
+  );
+};
+
+const EntryDetails: React.FC<EntryDetailsProps> = ({ entry }) => {
+  switch (entry.type) {
+    case 'HealthCheck':
+      return (
+        <div>
+          <p>{entry.date} <span style={{fontStyle: 'italic'}}>{entry.description}</span></p>
+          <ul>
+            {entry.diagnosisCodes?.map(code =>
+              <li key={code}>{code}</li>
+            )}
+          </ul>
+        </div>
+      );
+    case 'OccupationalHealthcare':
+      return (
+        <div>
+          <p>{entry.date} <span style={{fontStyle: 'italic'}}>{entry.description}</span></p>
+          <ul>
+            {entry.diagnosisCodes?.map(code =>
+              <li key={code}>{code}</li>
+            )}
+          </ul>
+        </div>
+      );
+    case 'Hospital':
+     return (
+        <div>
+          <p>{entry.date} <span style={{fontStyle: 'italic'}}>{entry.description}</span></p>
+          <ul>
+            {entry.diagnosisCodes?.map(code =>
+              <li key={code}>{code}</li>
+            )}
+          </ul>
+       </div>
+     );
+     default:
+      return assertNever(entry);
+  }
 };
 
 export default PatientDetailsPage;
