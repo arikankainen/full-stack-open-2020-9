@@ -73,6 +73,8 @@ const assertNever = (value: never): never => {
 };
 
 const EntryDetails: React.FC<EntryDetailsProps> = ({ entry }) => {
+  const [{ diagnosis },] = useStateValue();
+
   switch (entry.type) {
     case 'HealthCheck':
       return (
@@ -80,7 +82,9 @@ const EntryDetails: React.FC<EntryDetailsProps> = ({ entry }) => {
           <p>{entry.date} <span style={{fontStyle: 'italic'}}>{entry.description}</span></p>
           <ul>
             {entry.diagnosisCodes?.map(code =>
-              <li key={code}>{code}</li>
+              <li key={code}>
+                {code} {diagnosis[code].name}
+              </li>
             )}
           </ul>
         </div>
@@ -91,7 +95,9 @@ const EntryDetails: React.FC<EntryDetailsProps> = ({ entry }) => {
           <p>{entry.date} <span style={{fontStyle: 'italic'}}>{entry.description}</span></p>
           <ul>
             {entry.diagnosisCodes?.map(code =>
-              <li key={code}>{code}</li>
+              <li key={code}>
+                {code} {diagnosis[code].name}
+              </li>
             )}
           </ul>
         </div>
@@ -102,7 +108,9 @@ const EntryDetails: React.FC<EntryDetailsProps> = ({ entry }) => {
           <p>{entry.date} <span style={{fontStyle: 'italic'}}>{entry.description}</span></p>
           <ul>
             {entry.diagnosisCodes?.map(code =>
-              <li key={code}>{code}</li>
+              <li key={code}>
+                {code} {diagnosis[code].name}
+              </li>
             )}
           </ul>
        </div>
