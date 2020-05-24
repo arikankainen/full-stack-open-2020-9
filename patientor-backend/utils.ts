@@ -1,5 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NewPatient, Gender } from './types';
+import {
+  NewPatient,
+  Gender,
+  Entry,
+  HealthCheckEntry,
+  NewHealthCheckEntry,
+  NewEntry,
+  OccupationalHealthCareEntry,
+  NewOccupationalHealthCareEntry,
+  HospitalEntry,
+  NewHospitalEntry,
+} from './types';
 
 const isString = (text: any): text is string => {
   return typeof text === 'string' || text instanceof String;
@@ -48,7 +59,7 @@ const parseGender = (gender: any): Gender => {
   return gender;
 };
 
-const toNewPatientEntry = (object: any): NewPatient => {
+export const toNewPatient = (object: any): NewPatient => {
   return {
     name: parseName(object.name),
     dateOfBirth: parseDateOfBirth(object.dateOfBirth),
@@ -59,4 +70,48 @@ const toNewPatientEntry = (object: any): NewPatient => {
   };
 };
 
-export default toNewPatientEntry;
+const toNewHealthCheckEntry = (object: HealthCheckEntry): NewHealthCheckEntry => {
+  if (!object.description) throw new Error(`Missing 'description' value`);
+  if (!object.date) throw new Error(`Missing 'date' value`);
+  if (!object.specialist) throw new Error(`Missing 'specialist' value`);
+  if (object.healthCheckRating === undefined) throw new Error(`Missing 'health check rating' value`);
+
+  return object;
+};
+
+const toNewOccupationalHealthCareEntry = (object: OccupationalHealthCareEntry): NewOccupationalHealthCareEntry => {
+  if (!object.description) throw new Error(`Missing 'description' value`);
+  if (!object.date) throw new Error(`Missing 'date' value`);
+  if (!object.specialist) throw new Error(`Missing 'specialist' value`);
+  if (!object.employerName) throw new Error(`Missing 'employer name' value`);
+
+  return object;
+};
+
+const toNewHospitalEntry = (object: HospitalEntry): NewHospitalEntry => {
+  if (!object.description) throw new Error(`Missing 'description' value`);
+  if (!object.date) throw new Error(`Missing 'date' value`);
+  if (!object.specialist) throw new Error(`Missing 'specialist' value`);
+  if (!object.discharge) throw new Error(`Missing 'discharge' value`);
+
+  return object;
+};
+
+const assertNever = (value: never): never => {
+  throw new Error(
+    `Incorrect 'type' value: ${JSON.stringify(value)}`
+  );
+};
+
+export const toNewPatientEntry = (entry: Entry): NewEntry => {
+  switch (entry.type) {
+    case 'HealthCheck':
+      return toNewHealthCheckEntry(entry);
+    case 'OccupationalHealthcare':
+      return toNewOccupationalHealthCareEntry(entry);
+    case 'Hospital':
+      return toNewHospitalEntry(entry);
+    default:
+      return assertNever(entry);
+  }
+};
