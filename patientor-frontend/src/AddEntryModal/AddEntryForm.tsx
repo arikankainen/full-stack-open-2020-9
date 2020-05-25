@@ -27,15 +27,17 @@ const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
       }}
       onSubmit={onSubmit}
       validate={values => {
-        const requiredError = 'Field is required';
+        const requiredError = 'Field is required to have length of 3 characters';
+        const dateFormatError = 'Invalid date format';
         const errors: { [field: string]: string } = {};
-        if (!values.date) {
-          errors.date = requiredError;
+        
+        if (!values.date || !/^(1|2)[0-9]{3}-[0-9]{2}-[0-9]{2}$/i.test(values.date)) {
+          errors.date = dateFormatError;
         }
-        if (!values.specialist) {
+        if (!values.specialist || values.specialist.length < 3) {
           errors.specialist = requiredError;
         }
-        if (!values.description) {
+        if (!values.description || values.description.length < 3) {
           errors.description = requiredError;
         }
         return errors;
