@@ -18,10 +18,12 @@ const PatientDetailsPage: React.FC = () => {
 
   const [healthCheckModalOpen, setHealthCheckModalOpen] = React.useState<boolean>(false);
   const [occupationalHealthCareModalOpen, setOccupationalHealthCareModalOpen] = React.useState<boolean>(false);
+  const [hospitalModalOpen, setHospitalModalOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
 
   const openHealthCheckModal = (): void => setHealthCheckModalOpen(true);
   const openOccupationalHealthCareModal = (): void => setOccupationalHealthCareModalOpen(true);
+  const openHospitalModal = (): void => setHospitalModalOpen(true);
 
   const closeHealthCheckModal = (): void => {
     setHealthCheckModalOpen(false);
@@ -30,6 +32,11 @@ const PatientDetailsPage: React.FC = () => {
 
   const closeOccupationalHealthCareModal = (): void => {
     setOccupationalHealthCareModalOpen(false);
+    setError(undefined);
+  };
+
+  const closeHospitalModal = (): void => {
+    setHospitalModalOpen(false);
     setError(undefined);
   };
 
@@ -43,6 +50,7 @@ const PatientDetailsPage: React.FC = () => {
       dispatch(updatePatient(updatedPatient));
       closeHealthCheckModal();
       closeOccupationalHealthCareModal();
+      closeHospitalModal();
     } catch (e) {
       console.error(e.response.data);
       setError(e.response.data.error);
@@ -70,6 +78,11 @@ const PatientDetailsPage: React.FC = () => {
     <div>Loading patient information...</div>
   );
 
+  const buttonMargin = {
+    marginTop: '3px',
+    marginBottom: '3px'
+  };
+
   return (
     <Container>
       <Header as='h2'>
@@ -89,7 +102,6 @@ const PatientDetailsPage: React.FC = () => {
         onClose={closeHealthCheckModal}
         entryType='HealthCheck'
       />
-      <Button onClick={() => openHealthCheckModal()}>Add New Health Check Entry</Button>
 
       <AddEntryModal
         modalOpen={occupationalHealthCareModalOpen}
@@ -98,7 +110,24 @@ const PatientDetailsPage: React.FC = () => {
         onClose={closeOccupationalHealthCareModal}
         entryType='OccupationalHealthcare'
       />
-      <Button onClick={() => openOccupationalHealthCareModal()}>Add New Occupational Healthcare Entry</Button>
+
+      <AddEntryModal
+        modalOpen={hospitalModalOpen}
+        onSubmit={submitEntryForm}
+        error={error}
+        onClose={closeHospitalModal}
+        entryType='Hospital'
+      />
+
+      <div style={buttonMargin}>
+        <Button onClick={() => openHealthCheckModal()}>Add New Health Check Entry</Button>
+      </div>
+      <div style={buttonMargin}>
+        <Button onClick={() => openOccupationalHealthCareModal()}>Add New Occupational Healthcare Entry</Button>
+      </div>
+      <div style={buttonMargin}>
+        <Button onClick={() => openHospitalModal()}>Add New Hospital Entry</Button>
+      </div>
 
       {patient.entries?.map(entry =>
         <EntryDetails key={entry.id} entry={entry}/>
