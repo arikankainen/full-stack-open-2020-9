@@ -11,12 +11,12 @@ export enum HealthCheckRating {
   'CriticalRisk' = 3,
 }
 
-interface DischargeEntry {
+export interface DischargeEntry {
   date: string;
   criteria: string;
 }
 
-interface SickLeaveEntry {
+export interface SickLeaveEntry {
   startDate: string;
   endDate: string;
 }
@@ -66,3 +66,12 @@ export interface Patient {
   dateOfBirth?: string;
   entries?: Entry[];
 }
+
+export type HealthCheckFormValues = Omit<HealthCheckEntry, "id">;
+export type OccupationalHealthCareFormValues = Omit<OccupationalHealthCareEntry, "id">;
+export type HospitalFormValues = Omit<HospitalEntry, "id">;
+
+export type EntryFormValues =
+  | HealthCheckFormValues
+  | OccupationalHealthCareFormValues
+  | HospitalFormValues;

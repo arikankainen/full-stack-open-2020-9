@@ -8,7 +8,7 @@ import { Container, Header, Button } from "semantic-ui-react";
 import EntryDetails from './EntryDetails';
 import GenderIcon from './GenderIcon';
 import AddEntryModal from '../AddEntryModal';
-import { EntryFormValues } from '../AddEntryModal/AddEntryForm';
+import { EntryFormValues } from '../types';
 
 const PatientDetailsPage: React.FC = () => {
   const [{ patients }, dispatch] = useStateValue();
@@ -16,17 +16,24 @@ const PatientDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const patient: Patient = patients[id];
 
-  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+  const [healthCheckModalOpen, setHealthCheckModalOpen] = React.useState<boolean>(false);
+  const [occupationalHealthCareModalOpen, setOccupationalHealthCareModalOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
 
-  const openModal = (): void => setModalOpen(true);
+  const openHealthCheckModal = (): void => setHealthCheckModalOpen(true);
+  const openOccupationalHealthCareModal = (): void => setOccupationalHealthCareModalOpen(true);
 
-  const closeModal = (): void => {
-    setModalOpen(false);
+  const closeHealthCheckModal = (): void => {
+    setHealthCheckModalOpen(false);
     setError(undefined);
   };
 
-  const submitNewPatient = async (values: EntryFormValues) => {
+  const closeOccupationalHealthCareModal = (): void => {
+    setOccupationalHealthCareModalOpen(false);
+    setError(undefined);
+  };
+
+  const submitEntryForm = async (values: EntryFormValues) => {
     try {
       const { data: updatedPatient } = await axios.post<Patient>(
         `${apiBaseUrl}/patients/${id}/entries`,
@@ -34,7 +41,8 @@ const PatientDetailsPage: React.FC = () => {
       );
       if (!updatePatient) throw new Error(`Patient with id ${id} not found`);
       dispatch(updatePatient(updatedPatient));
-      closeModal();
+      closeHealthCheckModal();
+      closeOccupationalHealthCareModal();
     } catch (e) {
       console.error(e.response.data);
       setError(e.response.data.error);
@@ -75,12 +83,22 @@ const PatientDetailsPage: React.FC = () => {
       <Header as='h3'>entries</Header>
       
       <AddEntryModal
-        modalOpen={modalOpen}
-        onSubmit={submitNewPatient}
+        modalOpen={healthCheckModalOpen}
+        onSubmit={submitEntryForm}
         error={error}
-        onClose={closeModal}
+        onClose={closeHealthCheckModal}
+        entryType='HealthCheck'
       />
-      <Button onClick={() => openModal()}>Add New Entry</Button>
+      <Button onClick={() => openHealthCheckModal()}>Add New Health Check Entry</Button>
+
+      <AddEntryModal
+        modalOpen={occupationalHealthCareModalOpen}
+        onSubmit={submitEntryForm}
+        error={error}
+        onClose={closeOccupationalHealthCareModal}
+        entryType='OccupationalHealthcare'
+      />
+      <Button onClick={() => openOccupationalHealthCareModal()}>Add New Occupational Healthcare Entry</Button>
 
       {patient.entries?.map(entry =>
         <EntryDetails key={entry.id} entry={entry}/>

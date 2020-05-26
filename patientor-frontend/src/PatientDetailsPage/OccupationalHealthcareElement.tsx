@@ -11,6 +11,7 @@ const OccupationalHealthcareElement: React.FC<{ entry: OccupationalHealthCareEnt
       </Header>
       <span style={{fontStyle: 'italic'}}>{entry.description}</span>
       <DiagnosisCodeElement entry={entry}/>
+      {entry.sickLeave?.startDate && <div>Sick leave: {entry.sickLeave?.startDate} - {entry.sickLeave?.endDate}</div>}
     </Segment>
   );
 };

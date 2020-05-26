@@ -2,18 +2,20 @@ import React from 'react';
 import { Grid, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 import { TextField, DiagnosisSelection, NumberField } from "../AddPatientModal/FormField";
-import { HealthCheckEntry } from "../types";
+import { HealthCheckFormValues } from "../types";
 import { useStateValue } from '../state';
 
-export type EntryFormValues = Omit<HealthCheckEntry, "id">;
-
 interface Props {
-  onSubmit: (values: EntryFormValues) => void;
+  onSubmit: (values: HealthCheckFormValues) => void;
   onCancel: () => void;
 }
 
-const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
+const AddHealthCheckForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
   const [{ diagnosis }] = useStateValue();
+
+  const isValidDate = (date: string): boolean => {
+    return (/^(1|2)[0-9]{3}-[0-9]{2}-[0-9]{2}$/i.test(date));
+  };
 
   return (
     <Formik
@@ -31,7 +33,7 @@ const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
         const dateFormatError = 'Invalid date format';
         const errors: { [field: string]: string } = {};
         
-        if (!values.date || !/^(1|2)[0-9]{3}-[0-9]{2}-[0-9]{2}$/i.test(values.date)) {
+        if (!values.date || !isValidDate(values.date)) {
           errors.date = dateFormatError;
         }
         if (!values.specialist || values.specialist.length < 3) {
@@ -101,4 +103,4 @@ const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
   );
 };
 
-export default AddEntryForm;
+export default AddHealthCheckForm;

@@ -11,6 +11,7 @@ const HospitalElement: React.FC<{ entry: HospitalEntry }> = ({ entry }) => {
       </Header>
       <span style={{fontStyle: 'italic'}}>{entry.description}</span>
       <DiagnosisCodeElement entry={entry}/>
+      <div>Discharge date: {entry.discharge.date}</div><div>Discharge criteria: {entry.discharge.criteria}</div>
     </Segment>
   );
 };
