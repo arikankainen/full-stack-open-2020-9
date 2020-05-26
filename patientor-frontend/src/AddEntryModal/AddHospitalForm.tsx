@@ -51,7 +51,7 @@ const AddHospitalForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
           errors.description = requiredError;
         }
         
-        if (values.discharge && values.discharge.date.length > 0 && !isValidDate(values.discharge.date)) {
+        if (values.discharge && !isValidDate(values.discharge.date)) {
           discharge.date = dateFormatError;
         } else {
           discharge.date = '';
